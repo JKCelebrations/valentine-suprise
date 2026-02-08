@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For Teju 💖</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg,#ff9a9e,#fad0c4);
+  overflow: hidden;
+}
+
+.darkMode {
+  background: linear-gradient(135deg,#1b1b1b,#3a0f2e);
+}
+
+/* LOVE BALLOONS */
+.balloon {
+  position: fixed;
+  bottom: -60px;
+  font-size: 42px;
+  opacity: 0.85;
+  animation: balloonFloat linear infinite;
+  pointer-events: none;
+  z-index: 1;
+  filter: drop-shadow(0 0 6px rgba(255,0,0,0.5));
+}
+@keyframes balloonFloat {
+  to {
+    transform: translateY(-120vh) translateX(40px);
+    opacity: 0;
+  }
+}
+
+/* CENTER */
+.center {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* GIFT */
+#gift {
+  font-size: 160px;
+  cursor: pointer;
+  pointer-events: auto;
+  animation: giftFloat 2s ease-in-out infinite, giftGlow 2s infinite;
+  transition: left .35s cubic-bezier(.25,.8,.25,1),
+              top  .35s cubic-bezier(.25,.8,.25,1);
+}
+@keyframes giftFloat {
+  50% { transform: translateY(-18px); }
+}
+@keyframes giftGlow {
+  50% { filter: drop-shadow(0 0 25px rgba(255,0,0,.9)); }
+}
+
+/* GIFT TEASE */
+#giftTease {
+  position: fixed;
+  top: 18%;
+  width: 100%;
+  text-align: center;
+  font-size: 34px;
+  font-weight: 600;
+  color: #b00020;
+  z-index: 4;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity .25s ease, transform .25s ease;
+  pointer-events: none;
+}
+#giftTease.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* CARD */
+#card {
+  display: none;
+  background: white;
+  padding: 45px 50px;
+  border-radius: 30px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,.25);
+  pointer-events: auto;
+}
+
+h1 {
+  color: #e63946;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 50% { transform: scale(1.05); } }
+
+#noTease {
+  margin: 14px 0 24px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #6c757d;
+}
+
+/* BUTTONS */
+.btnRow {
+  position: relative;
+  display: flex;
+  gap: 22px;
+  justify-content: center;
+}
+
+button {
+  padding: 14px 36px;
+  font-size: 18px;
+  border-radius: 40px;
+  border: none;
+  cursor: pointer;
+}
+
+#yesBtn {
+  background: linear-gradient(135deg,#ff4d6d,#ff85a1);
+  color: white;
+  box-shadow: 0 0 18px rgba(255,77,109,.6);
+}
+
+/* NO ZONE */
+#noZone {
+  position: relative;
+  padding: 30px;
+  transition: left .35s cubic-bezier(.25,.8,.25,1),
+              top  .35s cubic-bezier(.25,.8,.25,1);
+}
+#noZone button {
+  pointer-events: none;
+  background: #dee2e6;
+  color: #495057;
+}
+
+/* FIREWORKS (visual only) */
+.firework {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: explode 1s ease-out forwards;
+  z-index: 10;
+}
+@keyframes explode {
+  to {
+    transform: translate(var(--x), var(--y));
+    opacity: 0;
+  }
+}
+
+/* PHOTO */
+#photoReveal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle, rgba(0,0,0,.2), rgba(0,0,0,.8)),
+    linear-gradient(135deg,#ff758c,#ff7eb3);
+  backdrop-filter: blur(6px);
+  z-index: 20;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+#photoReveal.show {
+  display: flex;
+}
+#photoReveal img {
+  width: 360px;
+  max-width: 90vw;
+  border-radius: 24px;
+}
+#photoText {
+  margin-top: 25px;
+  color: white;
+  font-size: 30px;
+}
+#replayBtn {
+  margin-top: 30px;
+  padding: 12px 26px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div id="giftTease">🎁 Catch the gift!</div>
+
+<!-- BALLOONS -->
+<script>
+const balloons = ["🎈","❤️","💖","💕","💗"];
+setInterval(() => {
+  const b = document.createElement("div");
+  b.className = "balloon";
+  b.innerText = balloons[Math.floor(Math.random()*balloons.length)];
+  b.style.left = Math.random()*100 + "vw";
+  b.style.animationDuration = (6 + Math.random()*6) + "s";
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(),12000);
+}, 280);
+</script>
+
+<!-- GIFT -->
+<div class="center">
+  <div id="gift">🎁</div>
+</div>
+
+<!-- CARD -->
+<div class="center">
+  <div id="card">
+    <h1>Teju 💖<br>Will you be my Valentine?</h1>
+    <div id="noTease">😏 Try clicking No…</div>
+
+    <div class="btnRow">
+      <button id="yesBtn">Yes 💕</button>
+      <div id="noZone"><button>No 🙈</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- PHOTO -->
+<div id="photoReveal">
+  <img src="p2.jpeg">
+  <div id="photoText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;💕Love You Tejamma💕<br>Thank you for being my Valentine 💖</div>
+  <button id="replayBtn">Replay 💖</button>
+</div>
+
+<!-- AUDIO (LOCAL FILE) -->
+<audio id="music" preload="auto">
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const gift = document.getElementById("gift");
+const giftTease = document.getElementById("giftTease");
+const card = document.getElementById("card");
+const noZone = document.getElementById("noZone");
+const noTease = document.getElementById("noTease");
+const yesBtn = document.getElementById("yesBtn");
+const photoReveal = document.getElementById("photoReveal");
+const replayBtn = document.getElementById("replayBtn");
+const music = document.getElementById("music");
+
+let musicStarted = false;
+let giftEscapes = 0;
+const maxGiftEscapes = 5;
+
+const giftMessages = [
+  "🎁 Catch me if you can!",
+  "😜 Almost got me!",
+  "💖 Not yet!",
+  "🙈 Too slow!",
+  "😌 Okay okay… last try!"
+];
+
+let giftMsgIndex = 0;
+
+function showGiftTease() {
+  giftTease.innerText = giftMessages[giftMsgIndex];
+
+  giftTease.classList.add("show");
+
+  setTimeout(() => {
+    giftTease.classList.remove("show");
+  }, 800);
+
+  // move to next message (stop at last)
+  if (giftMsgIndex <= giftMessages.length) {
+    giftMsgIndex++;
+  }
+}
+
+gift.onclick = () => {
+
+  // 🎵 start song from 21s on FIRST click
+  if (!musicStarted) {
+    music.currentTime = 20;
+    music.volume = 0.6;
+    music.play().catch(()=>{});
+    musicStarted = true;
+  }
+
+  if (giftEscapes < maxGiftEscapes) {
+    giftEscapes++;
+    showGiftTease();
+    moveGift();
+    return;
+  }
+
+  gift.style.display = "none";
+  giftTease.style.display = "none";
+  card.style.display = "block";
+};
+
+function moveGift() {
+  const size = 160;
+  gift.style.position = "fixed";
+  gift.style.left = Math.random()*(window.innerWidth-size)+"px";
+  gift.style.top = Math.random()*(window.innerHeight-size)+"px";
+}
+
+/* NO ESCAPE */
+const noMessages = ["😏 Almost!","😉 Nice try!","😜 Nope!","💖 Hehe!","🙈 Too slow!"];
+noZone.addEventListener("pointerenter", () => {
+  const r = card.getBoundingClientRect();
+  noZone.style.position="absolute";
+  noZone.style.left=Math.random()*(r.width-160)+"px";
+  noZone.style.top=Math.random()*(r.height-90)+"px";
+  noTease.innerText = noMessages[Math.floor(Math.random()*noMessages.length)];
+});
+
+/* YES */
+yesBtn.onclick = () => {
+
+  // 🎵 Play song from 1:00 to 1:20
+  music.currentTime = 60;   // 1 minute
+  music.volume = 0.7;
+  music.play().catch(()=>{});
+
+  // ⏹ Stop after 20 seconds
+  setTimeout(() => {
+    music.pause();
+    music.currentTime = 0; // optional reset
+  }, 20000);
+
+  // Existing visuals (unchanged)
+  fireworks();
+  card.style.display = "none";
+  document.body.classList.add("darkMode");
+
+  setTimeout(() => {
+    photoReveal.classList.add("show");
+  }, 700);
+};
+
+replayBtn.onclick = () => location.reload();
+
+/* FIREWORKS (visual only) */
+function fireworks(){
+  for(let i=0;i<180;i++){
+    const f=document.createElement("div");
+    f.className="firework";
+    f.style.left="50vw";
+    f.style.top="50vh";
+    f.style.background=["#ff4d6d","#ffd166","#ff85a1","#fff"][Math.floor(Math.random()*4)];
+    f.style.setProperty("--x",(Math.random()*500-250)+"px");
+    f.style.setProperty("--y",(Math.random()*500-250)+"px");
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),1000);
+  }
+}
+</script>
+
+</body>
+</html>
