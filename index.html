@@ -13,6 +13,24 @@ body {
   overflow: hidden;
 }
 
+/* RIBBONS & FLOWERS */
+.fall {
+  position: fixed;
+  top: -50px;
+  font-size: 28px;
+  animation: fallDown linear forwards;
+  pointer-events: none;
+  z-index: 25;
+}
+
+@keyframes fallDown {
+  to {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+
 .darkMode {
   background: linear-gradient(135deg,#1b1b1b,#3a0f2e);
 }
@@ -243,6 +261,27 @@ setInterval(() => {
 </audio>
 
 <script>
+function startCelebrationFall() {
+  const items = ["🎀","🌸","🌹","🌺","💐"];
+
+  const interval = setInterval(() => {
+    const el = document.createElement("div");
+    el.className = "fall";
+    el.innerText = items[Math.floor(Math.random() * items.length)];
+
+    el.style.left = Math.random() * 100 + "vw";
+    el.style.fontSize = (22 + Math.random() * 20) + "px";
+    el.style.animationDuration = (4 + Math.random() * 3) + "s";
+
+    document.body.appendChild(el);
+
+    setTimeout(() => el.remove(), 7000);
+  }, 250);
+
+  // stop after 6 seconds
+  setTimeout(() => clearInterval(interval), 20000);
+}
+
 const gift = document.getElementById("gift");
 const giftTease = document.getElementById("giftTease");
 const card = document.getElementById("card");
@@ -342,6 +381,7 @@ yesBtn.onclick = () => {
 
   setTimeout(() => {
     photoReveal.classList.add("show");
+    startCelebrationFall();
   }, 700);
 };
 
