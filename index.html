@@ -738,11 +738,13 @@ function spawnConfetti(count){
 /* ================= FIRECRACKERS ================= */
 function firecrackerShow(cb){
   const burstTimes = [0, 250, 500, 800, 1100, 1400, 1700];
+  const total = burstTimes.length;
   burstTimes.forEach((t,i) => {
     setTimeout(()=>{
-      const isFinale = (i === burstTimes.length - 1);
-      const particles = isFinale ? 280 : 70 + Math.random()*70;
-      const vol = isFinale ? .45 : .25 + Math.random()*.15;
+      // Steep fade: big start, quickly quiet so song takes over smoothly
+      const fade = Math.pow(1 - i / (total - 1), 2); // exponential drop
+      const vol = 0.80 * fade + 0.03; // 0.83 → 0.03
+      const particles = Math.round(220 * fade + 30); // 250 → 30
       const cx = 20 + Math.random()*60;
       const cy = 15 + Math.random()*40;
       burst(particles, vol, cx, cy);
@@ -786,6 +788,8 @@ let idx = 0;
   const fin = new Image(); fin.src = "p19.jpeg";
 })();
 
+let slideshowSparkleInterval = null;
+
 function startSlideshow(){
   stopFalling();
   idx = 0;
@@ -797,12 +801,16 @@ function startSlideshow(){
   slideCounter.innerText = `1 / ${images.length}`;
   slideshow.style.display = "flex";
 
+  // Sparkles falling during slideshow
+  startSlideshowSparkles();
+
   let useA = true; // tracks which layer is currently showing
 
   const interval = setInterval(()=>{
     idx++;
     if(idx >= images.length){
       clearInterval(interval);
+      stopSlideshowSparkles();
       // Fade out the current layer, then end
       slideA.classList.remove("active");
       slideB.classList.remove("active");
@@ -828,6 +836,29 @@ function startSlideshow(){
     }
     useA = !useA;
   }, 2500);
+}
+
+/* ================= SLIDESHOW SPARKLES ================= */
+function startSlideshowSparkles(){
+  const items = ["✨","💫","🌸","💖","⭐"];
+  slideshowSparkleInterval = setInterval(()=>{
+    const s = document.createElement("div");
+    s.className = "fall";
+    s.innerText = items[Math.floor(Math.random()*items.length)];
+    s.style.left = Math.random()*100+"vw";
+    s.style.fontSize = (16 + Math.random()*14)+"px";
+    s.style.animationDuration = (6 + Math.random()*4)+"s";
+    s.style.opacity = ".5";
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(), 10000);
+  }, 800);
+}
+
+function stopSlideshowSparkles(){
+  if(slideshowSparkleInterval){
+    clearInterval(slideshowSparkleInterval);
+    slideshowSparkleInterval = null;
+  }
 }
 
 /* ================= FINAL SCREEN ================= */
