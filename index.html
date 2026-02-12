@@ -235,13 +235,14 @@ button{
   50%    { background-position:100% 50%; }
 }
 
-/* No button - smooth side dodge */
+/* No button - dodges outside the card */
 #noBtn{
   background:rgba(255,255,255,.12);
   color:rgba(255,255,255,.6);
   border:1px solid rgba(255,255,255,.15);
-  transition:all .4s cubic-bezier(.25,.8,.25,1);
+  transition:all .35s cubic-bezier(.25,.8,.25,1);
   position:relative;
+  z-index:10;
 }
 #noBtn:hover{
   background:rgba(255,255,255,.18);
@@ -308,12 +309,6 @@ button{
 .slideWrap img.active{
   opacity:1;
   transform:scale(1);
-}
-#slideCounter{
-  font-size:14px;
-  color:rgba(255,255,255,.5);
-  letter-spacing:3px;
-  margin-top:10px;
 }
 
 /* ================= FINAL LOVE BACKGROUND ================= */
@@ -510,7 +505,6 @@ button{
     <img id="slideA">
     <img id="slideB">
   </div>
-  <div id="slideCounter"></div>
 </div>
 
 <div id="photoReveal">
@@ -527,6 +521,7 @@ button{
 const music = document.getElementById("music");
 const fireSounds = ["fire2.mp3","fire1.mp3"];
 let fallingInterval = null;
+const activeCrackerAudio = []; // track playing firecracker sounds so we can stop them
 
 /* ================= TWINKLING STARS ================= */
 (function createStars(){
@@ -615,7 +610,6 @@ const noText      = document.getElementById("noText");
 const slideshow   = document.getElementById("slideshow");
 const slideA      = document.getElementById("slideA");
 const slideB      = document.getElementById("slideB");
-const slideCounter= document.getElementById("slideCounter");
 const photoReveal = document.getElementById("photoReveal");
 const photoFrame  = document.getElementById("photoFrame");
 const loveMsg     = document.getElementById("loveMsg");
@@ -662,7 +656,8 @@ const noMsgs = [
   "Just say Yes!"
 ];
 let noDodgeCount = 0;
-let dodgeLeft = true;
+let lastDodgeZone = -1;
+let noBtnMoved = false; // track if we moved No btn to body
 
 noBtn.addEventListener("pointerenter",(e)=>{
   e.preventDefault();
@@ -673,29 +668,59 @@ noBtn.addEventListener("pointerenter",(e)=>{
   const scale = Math.min(1 + noDodgeCount * 0.06, 1.5);
   yesBtn.style.transform = `scale(${scale})`;
 
-  // Calculate dodge distance based on viewport
-  const vw = window.innerWidth;
-  const maxDodge = Math.min(vw * 0.3, 160); // 30vw or 160px max
-
-  if(dodgeLeft){
-    noBtn.style.transform = `translateX(-${maxDodge}px)`;
-  } else {
-    noBtn.style.transform = `translateX(${maxDodge}px)`;
+  // On first dodge, move No button out of card into body
+  // (card has transform from animation which breaks position:fixed on children)
+  if(!noBtnMoved){
+    document.body.appendChild(noBtn);
+    noBtnMoved = true;
   }
-  dodgeLeft = !dodgeLeft;
-});
 
-// Reset No button if it goes off-card on small screens
-noBtn.addEventListener("pointerleave",()=>{
-  // Slight delay so it doesn't snap back immediately
-  setTimeout(()=>{
-    // Keep it dodged — only resets on next hover to the OTHER side
-  },200);
+  const cardRect = card.getBoundingClientRect();
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const btnW = 100, btnH = 50;
+
+  // Build list of zones: above, below, right of card — NEVER left
+  const zones = [];
+  // Above card
+  if(cardRect.top > btnH + 30){
+    zones.push({ top: 10 + Math.random() * (cardRect.top - btnH - 30),
+                 left: 10 + Math.random() * (vw - btnW - 20) });
+  }
+  // Below card
+  if(vh - cardRect.bottom > btnH + 30){
+    zones.push({ top: cardRect.bottom + 15 + Math.random() * Math.min(vh - cardRect.bottom - btnH - 30, 100),
+                 left: 10 + Math.random() * (vw - btnW - 20) });
+  }
+  // Right of card
+  if(vw - cardRect.right > btnW + 30){
+    zones.push({ top: cardRect.top + Math.random() * Math.max(cardRect.height - btnH, 0),
+                 left: cardRect.right + 15 + Math.random() * Math.min(vw - cardRect.right - btnW - 30, 80) });
+  }
+
+  // Fallback: bottom-center of screen
+  if(zones.length === 0){
+    zones.push({ top: vh - btnH - 30, left: (vw - btnW) / 2 });
+  }
+
+  // Pick zone different from last
+  let zIdx;
+  do { zIdx = Math.floor(Math.random() * zones.length); }
+  while(zIdx === lastDodgeZone && zones.length > 1);
+  lastDodgeZone = zIdx;
+
+  const pos = zones[zIdx];
+  noBtn.style.position = "fixed";
+  noBtn.style.top = pos.top + "px";
+  noBtn.style.left = pos.left + "px";
+  noBtn.style.transform = "none";
+  noBtn.style.zIndex = "50";
 });
 
 /* ================= YES CLICK ================= */
 yesBtn.onclick = ()=>{
   card.style.display = "none";
+  noBtn.style.display = "none"; // hide No button (it may be outside card in body)
   music.pause();
 
   // Screen flash
@@ -709,6 +734,10 @@ yesBtn.onclick = ()=>{
 
   // Firecrackers for 2 seconds, THEN resume song + slideshow
   firecrackerShow(()=>{
+    // Stop ALL still-playing firecracker audio immediately
+    activeCrackerAudio.forEach(s => { s.pause(); s.currentTime = 0; });
+    activeCrackerAudio.length = 0;
+
     music.currentTime = 60;
     music.volume = .9;
     music.play().catch(()=>{});
@@ -737,19 +766,31 @@ function spawnConfetti(count){
 
 /* ================= FIRECRACKERS ================= */
 function firecrackerShow(cb){
-  const burstTimes = [0, 250, 500, 800, 1100, 1400, 1700];
-  const total = burstTimes.length;
-  burstTimes.forEach((t,i) => {
+  // 5 bursts with audio, then 2 visual-only tail bursts
+  const audioBursts = [0, 250, 500, 800, 1100];
+  const visualTail  = [1400, 1700];
+  const total = audioBursts.length;
+
+  audioBursts.forEach((t,i) => {
     setTimeout(()=>{
-      // Steep fade: big start, quickly quiet so song takes over smoothly
-      const fade = Math.pow(1 - i / (total - 1), 2); // exponential drop
-      const vol = 0.80 * fade + 0.03; // 0.83 → 0.03
-      const particles = Math.round(220 * fade + 30); // 250 → 30
+      const fade = Math.pow(1 - i / (total - 1), 2);
+      const vol = 0.80 * fade + 0.03;
+      const particles = Math.round(220 * fade + 30);
       const cx = 20 + Math.random()*60;
       const cy = 15 + Math.random()*40;
       burst(particles, vol, cx, cy);
     }, t);
   });
+
+  // Tail bursts are visual only — no sound leak into music
+  visualTail.forEach(t => {
+    setTimeout(()=>{
+      const cx = 20 + Math.random()*60;
+      const cy = 15 + Math.random()*40;
+      burstVisual(30, cx, cy);
+    }, t);
+  });
+
   setTimeout(cb, 1800);
 }
 
@@ -757,6 +798,11 @@ function burst(particles, vol, cx, cy){
   const snd = new Audio(fireSounds[Math.floor(Math.random()*fireSounds.length)]);
   snd.volume = vol;
   snd.play().catch(()=>{});
+  activeCrackerAudio.push(snd);
+  snd.addEventListener("ended",()=>{
+    const i = activeCrackerAudio.indexOf(snd);
+    if(i > -1) activeCrackerAudio.splice(i, 1);
+  });
 
   const colors = ["#ff4d6d","#ffd166","#ff85a1","#a855f7","#38bdf8","#fff","#fb923c","#34d399"];
   for(let i = 0; i < particles; i++){
@@ -798,7 +844,6 @@ function startSlideshow(){
   slideA.src = images[0];
   slideA.classList.add("active");
   slideB.classList.remove("active");
-  slideCounter.innerText = `1 / ${images.length}`;
   slideshow.style.display = "flex";
 
   // Sparkles falling during slideshow
@@ -820,8 +865,6 @@ function startSlideshow(){
       }, 800);
       return;
     }
-
-    slideCounter.innerText = `${idx+1} / ${images.length}`;
 
     if(useA){
       // Load next on B, crossfade: B fades in, A fades out
@@ -948,16 +991,36 @@ function typeMessage(text){
   setTimeout(type, 800);
 }
 
-/* ================= FINAL SCREEN MINI FIREWORKS ================= */
+/* ================= FINAL SCREEN MINI FIREWORKS (visual only, no sound) ================= */
 function startFinalFireworks(){
   let count = 0;
   const iv = setInterval(()=>{
     const cx = 10 + Math.random()*80;
     const cy = 10 + Math.random()*50;
-    burst(30, .3, cx, cy);
+    burstVisual(30, cx, cy);
     count++;
     if(count > 8) clearInterval(iv);
   }, 2500);
+}
+
+/* Visual-only burst — no firecracker audio */
+function burstVisual(particles, cx, cy){
+  const colors = ["#ff4d6d","#ffd166","#ff85a1","#a855f7","#38bdf8","#fff","#fb923c","#34d399"];
+  for(let i = 0; i < particles; i++){
+    const f = document.createElement("div");
+    f.className = "firework";
+    f.style.left = cx+"vw";
+    f.style.top  = cy+"vh";
+    const c = colors[Math.floor(Math.random()*colors.length)];
+    f.style.background = c;
+    f.style.color = c;
+    const angle = Math.random()*Math.PI*2;
+    const dist  = 60 + Math.random()*320;
+    f.style.setProperty("--x", Math.cos(angle)*dist+"px");
+    f.style.setProperty("--y", Math.sin(angle)*dist+"px");
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),1500);
+  }
 }
 </script>
 
