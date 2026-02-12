@@ -525,7 +525,7 @@ button{
 <script>
 /* ================= AUDIO ================= */
 const music = document.getElementById("music");
-const fireSounds = ["fire1.mp3","fire2.mp3"];
+const fireSounds = ["fire2.mp3","fire1.mp3"];
 let fallingInterval = null;
 
 /* ================= TWINKLING STARS ================= */
@@ -710,7 +710,7 @@ yesBtn.onclick = ()=>{
   // Firecrackers for 2 seconds, THEN resume song + slideshow
   firecrackerShow(()=>{
     music.currentTime = 60;
-    music.volume = .7;
+    music.volume = .9;
     music.play().catch(()=>{});
     startSlideshow();
   });
@@ -742,13 +742,13 @@ function firecrackerShow(cb){
     setTimeout(()=>{
       const isFinale = (i === burstTimes.length - 1);
       const particles = isFinale ? 280 : 70 + Math.random()*70;
-      const vol = isFinale ? 1 : .6 + Math.random()*.3;
+      const vol = isFinale ? .45 : .25 + Math.random()*.15;
       const cx = 20 + Math.random()*60;
       const cy = 15 + Math.random()*40;
       burst(particles, vol, cx, cy);
     }, t);
   });
-  setTimeout(cb, 2200);
+  setTimeout(cb, 1800);
 }
 
 function burst(particles, vol, cx, cy){
