@@ -775,8 +775,8 @@ function burst(particles, vol, cx, cy){
 }
 
 /* ================= SLIDESHOW ================= */
-// p1-p21 in slideshow, skip p22 (reserved for final screen)
-const images = [...Array(21)].map((_,i)=>`p${i+1}.jpeg`);
+// p1-p22 in slideshow, skip p19 and p21 (p19 = final reveal, p21 = excluded)
+const images = [...Array(22)].map((_,i)=>`p${i+1}.jpeg`).filter(s => s !== "p19.jpeg" && s !== "p21.jpeg");
 let idx = 0;
 
 // Preload all slideshow images to avoid flicker
