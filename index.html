@@ -2,18 +2,33 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Dear Teju</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>For Teju</title>
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 *{ margin:0; padding:0; box-sizing:border-box; }
 
 body{
-  height:100vh;
+  height:100vh; height:100dvh;
   font-family:'Poppins',sans-serif;
   overflow:hidden;
   background:linear-gradient(135deg,#1a0011,#2d0a1e,#0d001a);
   color:white;
+}
+
+/* ================= ANIMATED BG STARS ================= */
+.bgStar{
+  position:fixed;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:0;
+  background:white;
+  animation:twinkle ease-in-out infinite alternate;
+}
+@keyframes twinkle{
+  from{ opacity:.1; transform:scale(.8); }
+  to  { opacity:.8; transform:scale(1.2); }
 }
 
 /* ================= ANIMATED BG PARTICLES ================= */
@@ -27,8 +42,8 @@ body{
 }
 @keyframes bgFloat{
   0%  { opacity:0; transform:translateY(0) scale(.5); }
-  15% { opacity:.6; }
-  85% { opacity:.6; }
+  15% { opacity:.5; }
+  85% { opacity:.5; }
   100%{ opacity:0; transform:translateY(-100vh) scale(1.2); }
 }
 
@@ -72,17 +87,17 @@ body{
 
 /* ================= GIFT ================= */
 #gift{
-  font-size:160px;
+  font-size:clamp(100px,25vw,160px);
   cursor:pointer;
   pointer-events:auto;
   animation:giftBounce 2s ease-in-out infinite;
-  filter:drop-shadow(0 0 30px rgba(255,100,150,.7));
+  filter:drop-shadow(0 0 35px rgba(255,100,150,.8));
   transition:transform .2s;
 }
 #gift:hover{ transform:scale(1.15); }
 @keyframes giftBounce{
-  0%,100%{ transform:translateY(0) rotate(-2deg); }
-  50%    { transform:translateY(-22px) rotate(2deg); }
+  0%,100%{ transform:translateY(0) rotate(-3deg); }
+  50%    { transform:translateY(-22px) rotate(3deg); }
 }
 
 /* ================= GIFT HINT ================= */
@@ -91,23 +106,25 @@ body{
   bottom:18%;
   width:100%;
   text-align:center;
-  font-size:20px;
+  font-size:clamp(16px,4vw,20px);
   color:rgba(255,200,220,.8);
   animation:hintPulse 2s ease-in-out infinite;
   z-index:6;
   pointer-events:none;
+  letter-spacing:2px;
 }
 @keyframes hintPulse{
-  50%{ opacity:.4; }
+  0%,100%{ opacity:.8; transform:translateY(0); }
+  50%{ opacity:.3; transform:translateY(-5px); }
 }
 
 /* ================= GIFT MESSAGE ================= */
 #giftMsg{
   position:fixed;
-  top:15%;
+  top:12%;
   width:100%;
   text-align:center;
-  font-size:32px;
+  font-size:clamp(22px,5vw,32px);
   font-weight:600;
   color:#ff85a1;
   text-shadow:0 0 20px rgba(255,100,150,.6);
@@ -120,82 +137,126 @@ body{
 /* ================= CARD ================= */
 #card{
   display:none;
-  background:rgba(255,255,255,.12);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  border:1px solid rgba(255,255,255,.25);
-  padding:50px 55px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,.2);
+  padding:clamp(30px,6vw,50px) clamp(25px,6vw,55px);
   border-radius:30px;
   text-align:center;
   box-shadow:
-    0 20px 60px rgba(0,0,0,.4),
-    0 0 80px rgba(255,100,150,.15),
-    inset 0 0 30px rgba(255,255,255,.05);
+    0 25px 80px rgba(0,0,0,.5),
+    0 0 100px rgba(255,100,150,.12),
+    inset 0 1px 0 rgba(255,255,255,.15);
   pointer-events:auto;
-  animation:cardIn .6s cubic-bezier(.34,1.56,.64,1) forwards;
+  animation:cardIn .7s cubic-bezier(.34,1.56,.64,1) forwards;
+  position:relative;
+  max-width:92vw;
+  overflow:visible;
+}
+/* Animated border glow */
+#card::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:32px;
+  background:conic-gradient(from var(--angle,0deg),
+    #ff4d6d, #a855f7, #ff85a1, #ffd166, #ff4d6d);
+  z-index:-1;
+  opacity:.4;
+  filter:blur(12px);
+  animation:rotateBorder 4s linear infinite;
+}
+@property --angle{
+  syntax:"<angle>";
+  initial-value:0deg;
+  inherits:false;
+}
+@keyframes rotateBorder{
+  to{ --angle:360deg; }
 }
 @keyframes cardIn{
-  from{ transform:scale(.7) translateY(30px); opacity:0; }
+  from{ transform:scale(.6) translateY(40px); opacity:0; }
   to  { transform:scale(1) translateY(0); opacity:1; }
 }
 #card h1{
   font-family:'Dancing Script',cursive;
-  font-size:46px;
+  font-size:clamp(32px,7vw,48px);
   color:#ffd6e0;
   text-shadow:0 0 30px rgba(255,100,150,.5);
-  margin-bottom:10px;
+  margin-bottom:8px;
   line-height:1.3;
 }
 
 /* ================= BUTTONS ================= */
-.btnRow{ display:flex; gap:22px; justify-content:center; position:relative; }
+.btnRow{
+  display:flex;
+  gap:clamp(14px,4vw,24px);
+  justify-content:center;
+  align-items:center;
+}
 button{
-  padding:16px 40px;
+  padding:14px 34px;
   border-radius:50px;
   border:none;
-  font-size:18px;
+  font-size:clamp(15px,3.5vw,18px);
   font-family:'Poppins',sans-serif;
   font-weight:600;
   cursor:pointer;
-  transition:all .3s;
+  transition:all .35s cubic-bezier(.25,.8,.25,1);
+  white-space:nowrap;
 }
 #yesBtn{
   background:linear-gradient(135deg,#ff4d6d,#ff85a1);
   color:white;
-  box-shadow:0 8px 25px rgba(255,77,109,.5);
+  box-shadow:0 8px 30px rgba(255,77,109,.5);
   position:relative;
   overflow:hidden;
+  z-index:2;
 }
 #yesBtn:hover{
   transform:scale(1.08);
-  box-shadow:0 12px 35px rgba(255,77,109,.7);
+  box-shadow:0 12px 40px rgba(255,77,109,.7);
 }
 #yesBtn::after{
   content:"";
   position:absolute;
-  inset:-2px;
+  inset:-3px;
   border-radius:50px;
   background:linear-gradient(135deg,#ff4d6d,#ff85a1,#fff,#ff4d6d);
   background-size:300% 300%;
   animation:shimmer 3s ease-in-out infinite;
   z-index:-1;
-  filter:blur(8px);
-  opacity:.6;
+  filter:blur(10px);
+  opacity:.5;
 }
 @keyframes shimmer{
   0%,100%{ background-position:0% 50%; }
   50%    { background-position:100% 50%; }
 }
-#noZone button{
-  background:rgba(255,255,255,.15);
+
+/* No button - dodges outside the card */
+#noBtn{
+  background:rgba(255,255,255,.12);
   color:rgba(255,255,255,.6);
-  pointer-events:none;
   border:1px solid rgba(255,255,255,.15);
+  transition:all .35s cubic-bezier(.25,.8,.25,1);
+  position:relative;
+  z-index:10;
 }
+#noBtn:hover{
+  background:rgba(255,255,255,.18);
+}
+
 #noText{
-  margin:12px 0 18px;
-  font-size:17px;
-  color:rgba(255,200,220,.7);
+  margin:0 0 12px;
+  font-size:clamp(17px,4vw,22px);
+  font-weight:600;
+  color:#ff85a1;
+  text-shadow:0 0 16px rgba(255,100,150,.5);
+  min-height:28px;
+  transition:all .3s;
+  letter-spacing:1px;
 }
 
 /* ================= FIREWORK ================= */
@@ -210,7 +271,7 @@ button{
 }
 @keyframes explode{
   0%  { opacity:1; }
-  100%{ transform:translate(var(--x),var(--y)) scale(.3); opacity:0; }
+  100%{ transform:translate(var(--x),var(--y)) scale(.2); opacity:0; }
 }
 
 /* ================= SLIDESHOW ================= */
@@ -221,32 +282,44 @@ button{
   z-index:10;
   align-items:center;
   justify-content:center;
+  flex-direction:column;
+  gap:14px;
   pointer-events:none;
-  background:rgba(0,0,0,.3);
+  background:rgba(0,0,0,.4);
 }
-#slideshow img{
-  width:450px;
-  height:600px;
-  max-width:88vw;
-  max-height:72vh;
+.slideWrap{
+  position:relative;
+  width:clamp(280px,80vw,450px);
+  height:clamp(380px,65vh,600px);
+  max-width:90vw;
+  max-height:70vh;
+}
+.slideWrap img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
   object-fit:cover;
   border-radius:22px;
   box-shadow:
-    0 20px 60px rgba(0,0,0,.5),
-    0 0 40px rgba(255,100,150,.2);
-  border:3px solid rgba(255,255,255,.15);
-  transition:opacity .5s ease, transform .5s ease;
-}
-#slideshow img.fadeOut{
+    0 20px 60px rgba(0,0,0,.6),
+    0 0 50px rgba(255,100,150,.2);
+  border:2px solid rgba(255,255,255,.12);
+  transition:opacity .8s ease, transform .8s ease;
   opacity:0;
-  transform:scale(.95);
+  transform:scale(.97);
+}
+.slideWrap img.active{
+  opacity:1;
+  transform:scale(1);
 }
 
 /* ================= FINAL LOVE BACKGROUND ================= */
 .finalBG{
   background:
-    radial-gradient(circle at top,rgba(255,80,130,.3),transparent 60%),
-    radial-gradient(circle at bottom right,rgba(255,180,100,.15),transparent 50%),
+    radial-gradient(ellipse at 30% 20%, rgba(255,60,120,.2), transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(180,80,255,.15), transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(255,180,200,.08), transparent 60%),
     linear-gradient(135deg,#1a0015,#2d0a1e,#0d001a);
 }
 .finalBG::before{
@@ -255,14 +328,14 @@ button{
   inset:-20%;
   background:
     radial-gradient(circle at center,
-      rgba(255,100,150,.2),
-      rgba(255,182,193,.1),
+      rgba(255,100,150,.15),
+      rgba(255,182,193,.08),
       transparent 65%);
   animation:auraPulse 4s ease-in-out infinite;
   z-index:0;
 }
 @keyframes auraPulse{
-  50%{ transform:scale(1.08); opacity:.7; }
+  50%{ transform:scale(1.1); opacity:.6; }
 }
 
 /* ================= FINAL PHOTO ================= */
@@ -275,33 +348,112 @@ button{
   align-items:center;
   justify-content:center;
   flex-direction:column;
-  gap:20px;
+  gap:0;
+  padding:20px;
 }
-#photoReveal.show{
-  display:flex;
-  animation:fadeInUp .8s ease forwards;
+#photoReveal.show{ display:flex; }
+
+/* Photo wrapper with orbiting hearts */
+.photoFrame{
+  position:relative;
+  display:inline-block;
+  animation:photoEnter 1s cubic-bezier(.34,1.56,.64,1) forwards;
 }
-@keyframes fadeInUp{
-  from{ opacity:0; transform:translateY(30px); }
-  to  { opacity:1; transform:translateY(0); }
+@keyframes photoEnter{
+  from{ transform:scale(.5) translateY(40px); opacity:0; }
+  to  { transform:scale(1) translateY(0); opacity:1; }
 }
-#photoReveal img{
-  width:340px;
-  max-width:85vw;
+
+.photoFrame img{
+  width:clamp(260px,70vw,360px);
   border-radius:24px;
   z-index:25;
+  position:relative;
   box-shadow:
     0 20px 60px rgba(0,0,0,.5),
-    0 0 60px rgba(255,100,150,.25);
-  border:3px solid rgba(255,255,255,.15);
+    0 0 80px rgba(255,100,150,.3);
+  border:2px solid rgba(255,255,255,.15);
+  animation:photoBreath 3s ease-in-out infinite;
 }
-#photoReveal h2{
+@keyframes photoBreath{
+  50%{ box-shadow: 0 20px 60px rgba(0,0,0,.5), 0 0 120px rgba(255,100,150,.45); }
+}
+
+/* Glowing ring around photo */
+.photoFrame::before{
+  content:"";
+  position:absolute;
+  inset:-12px;
+  border-radius:32px;
+  border:2px solid transparent;
+  background:conic-gradient(from var(--angle,0deg),
+    rgba(255,77,109,.6), rgba(168,85,247,.4), rgba(255,133,161,.6),
+    rgba(255,209,102,.4), rgba(255,77,109,.6)) border-box;
+  -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  animation:rotateBorder 5s linear infinite;
+  z-index:24;
+}
+
+/* Orbiting sparkles */
+.orbitSparkle{
+  position:absolute;
+  font-size:18px;
+  animation:orbit linear infinite;
+  pointer-events:none;
+  z-index:26;
+  filter:drop-shadow(0 0 6px rgba(255,200,100,.6));
+}
+@keyframes orbit{
+  from{ transform:rotate(0deg) translateX(var(--r)) rotate(0deg); }
+  to  { transform:rotate(360deg) translateX(var(--r)) rotate(-360deg); }
+}
+
+/* Love message */
+#loveMsg{
   font-family:'Dancing Script',cursive;
-  font-size:36px;
+  font-size:clamp(26px,6vw,38px);
   color:#ffd6e0;
-  text-shadow:0 0 30px rgba(255,100,150,.5);
+  text-shadow:0 0 30px rgba(255,100,150,.5), 0 0 60px rgba(255,100,150,.2);
   text-align:center;
-  line-height:1.5;
+  line-height:1.6;
+  margin-top:18px;
+  animation:msgIn 1s ease .5s both;
+  z-index:25;
+}
+@keyframes msgIn{
+  from{ opacity:0; transform:translateY(20px); }
+  to  { opacity:1; transform:translateY(0); }
+}
+
+/* Typewriter cursor blink */
+.cursor{
+  display:inline-block;
+  width:2px;
+  height:1em;
+  background:#ffd6e0;
+  margin-left:4px;
+  vertical-align:text-bottom;
+  animation:blink .7s step-end infinite;
+}
+@keyframes blink{
+  50%{ opacity:0; }
+}
+
+/* Mini floating hearts on final screen */
+.miniHeart{
+  position:fixed;
+  pointer-events:none;
+  z-index:19;
+  opacity:0;
+  animation:miniFloat linear forwards;
+}
+@keyframes miniFloat{
+  0%  { opacity:0; transform:translateY(0) scale(.5); }
+  10% { opacity:.7; }
+  90% { opacity:.7; }
+  100%{ opacity:0; transform:translateY(-100vh) scale(1); }
 }
 
 /* ================= SCREEN FLASH ================= */
@@ -317,12 +469,24 @@ button{
   from{ opacity:.8; }
   to  { opacity:0; }
 }
+
+/* ================= CONFETTI ================= */
+.confetti{
+  position:fixed;
+  width:8px;
+  height:12px;
+  z-index:55;
+  animation:confettiFall linear forwards;
+  pointer-events:none;
+}
+@keyframes confettiFall{
+  0%  { opacity:1; transform:translateY(0) rotate(0deg); }
+  100%{ opacity:0; transform:translateY(100vh) rotate(720deg); }
+}
 </style>
 </head>
 
 <body>
-
-<!-- Background particles (created by JS) -->
 
 <div id="giftHint">Tap the gift!</div>
 <div id="giftMsg"></div>
@@ -330,23 +494,27 @@ button{
 
 <div class="center">
   <div id="card">
+    <div id="noText"></div>
     <h1>Teju<br>Will you be my Valentine?</h1>
-    <div id="noText">Try clicking No...</div>
     <div class="btnRow">
       <button id="yesBtn">Yes</button>
-      <div id="noZone"><button>No</button></div>
+      <button id="noBtn">No</button>
     </div>
   </div>
 </div>
 
-<div id="slideshow"><img id="slideImg"></div>
+<div id="slideshow">
+  <div class="slideWrap">
+    <img id="slideA">
+    <img id="slideB">
+  </div>
+</div>
 
 <div id="photoReveal">
-  <img src="p19.jpeg">
-  <h2>
-    Love You Tejamma<br>
-    Thank you for being my Valentine
-  </h2>
+  <div class="photoFrame" id="photoFrame">
+    <img src="p19.jpeg">
+  </div>
+  <div id="loveMsg"></div>
 </div>
 
 <audio id="music"><source src="song.mp3"></audio>
@@ -354,13 +522,30 @@ button{
 <script>
 /* ================= AUDIO ================= */
 const music = document.getElementById("music");
-const fireSounds = ["fire1.mp3","fire2.mp3"];
+const fireSounds = ["fire2.mp3","fire1.mp3"];
 let fallingInterval = null;
+const activeCrackerAudio = []; // track playing firecracker sounds so we can stop them
+
+/* ================= TWINKLING STARS ================= */
+(function createStars(){
+  for(let i = 0; i < 60; i++){
+    const s = document.createElement("div");
+    s.className = "bgStar";
+    const size = 1 + Math.random()*2.5;
+    s.style.width = size+"px";
+    s.style.height = size+"px";
+    s.style.left = Math.random()*100+"vw";
+    s.style.top  = Math.random()*100+"vh";
+    s.style.animationDuration = (1.5+Math.random()*3)+"s";
+    s.style.animationDelay = (Math.random()*4)+"s";
+    document.body.appendChild(s);
+  }
+})();
 
 /* ================= BACKGROUND PARTICLES ================= */
-function createBgParticles(){
-  const colors = ["rgba(255,100,150,.3)","rgba(255,180,220,.2)","rgba(200,100,255,.2)","rgba(255,200,150,.15)"];
-  for(let i = 0; i < 25; i++){
+(function createBgParticles(){
+  const colors = ["rgba(255,100,150,.25)","rgba(255,180,220,.15)","rgba(180,100,255,.15)","rgba(255,200,150,.1)"];
+  for(let i = 0; i < 20; i++){
     const p = document.createElement("div");
     p.className = "bgParticle";
     const size = 4 + Math.random()*8;
@@ -369,12 +554,11 @@ function createBgParticles(){
     p.style.left = Math.random()*100+"vw";
     p.style.bottom = "-20px";
     p.style.background = colors[Math.floor(Math.random()*colors.length)];
-    p.style.animationDuration = (10+Math.random()*15)+"s";
-    p.style.animationDelay = (Math.random()*15)+"s";
+    p.style.animationDuration = (12+Math.random()*18)+"s";
+    p.style.animationDelay = (Math.random()*12)+"s";
     document.body.appendChild(p);
   }
-}
-createBgParticles();
+})();
 
 /* ================= BALLOONS ================= */
 const balloonEmojis = ["🎈","❤️","💖","💕","💗"];
@@ -391,6 +575,10 @@ function startBalloons(){
     document.body.appendChild(b);
     setTimeout(()=>b.remove(),12000);
   },500);
+}
+function stopBalloons(){
+  if(balloonInterval){ clearInterval(balloonInterval); balloonInterval = null; }
+  document.querySelectorAll(".balloon").forEach(el => el.remove());
 }
 startBalloons();
 
@@ -410,24 +598,24 @@ function startFinalFalling(){
 }
 
 function stopFalling(){
-  if(fallingInterval){
-    clearInterval(fallingInterval);
-    fallingInterval = null;
-  }
+  if(fallingInterval){ clearInterval(fallingInterval); fallingInterval = null; }
   document.querySelectorAll(".fall").forEach(el => el.remove());
 }
 
 /* ================= ELEMENTS ================= */
-const gift      = document.getElementById("gift");
-const giftHint  = document.getElementById("giftHint");
-const giftMsg   = document.getElementById("giftMsg");
-const card      = document.getElementById("card");
-const yesBtn    = document.getElementById("yesBtn");
-const noZone    = document.getElementById("noZone");
-const noText    = document.getElementById("noText");
-const slideshow = document.getElementById("slideshow");
-const slideImg  = document.getElementById("slideImg");
+const gift        = document.getElementById("gift");
+const giftHint    = document.getElementById("giftHint");
+const giftMsg     = document.getElementById("giftMsg");
+const card        = document.getElementById("card");
+const yesBtn      = document.getElementById("yesBtn");
+const noBtn       = document.getElementById("noBtn");
+const noText      = document.getElementById("noText");
+const slideshow   = document.getElementById("slideshow");
+const slideA      = document.getElementById("slideA");
+const slideB      = document.getElementById("slideB");
 const photoReveal = document.getElementById("photoReveal");
+const photoFrame  = document.getElementById("photoFrame");
+const loveMsg     = document.getElementById("loveMsg");
 
 /* ================= GIFT ESCAPE ================= */
 const giftTexts = [
@@ -450,83 +638,182 @@ gift.onclick = ()=>{
   if(giftCount < giftTexts.length){
     giftMsg.innerText = giftTexts[giftCount];
     giftMsg.classList.add("show");
-    setTimeout(()=>giftMsg.classList.remove("show"),800);
+    setTimeout(()=>giftMsg.classList.remove("show"),900);
     gift.style.position = "fixed";
-    gift.style.left = Math.random()*(innerWidth-160)+"px";
-    gift.style.top  = Math.random()*(innerHeight-160)+"px";
+    const pad = 80;
+    gift.style.left = (pad + Math.random()*(innerWidth - pad*2))+"px";
+    gift.style.top  = (pad + Math.random()*(innerHeight - pad*2))+"px";
     giftCount++;
     return;
   }
   gift.style.display = "none";
   card.style.display = "block";
+  noText.innerText = "Try clicking No 😏";
 };
 
-/* ================= NO ESCAPE ================= */
+/* ================= NO BUTTON — SMOOTH SIDE DODGE ================= */
 const noMsgs = [
   "Nice try!",
-  "Almost!",
-  "Nope!",
-  "Haha no!",
-  "Just click Yes!"
+  "Haha nope!",
+  "Not happening!",
+  "Keep trying...",
+  "Just say Yes!"
 ];
-let noToggle = true, noIdx = 0;
-noZone.addEventListener("pointerenter",()=>{
-  noText.innerText = noMsgs[noIdx++ % noMsgs.length];
-  noZone.style.position = "relative";
-  noZone.style.top = (noToggle ? -260 : 200)+"px";
-  noToggle = !noToggle;
-});
+let noDodgeCount = 0;
+let lastDodgeZone = -1;
+let noBtnMoved = false;
+let lastDodgeTime = 0; // prevent double-fire from pointerenter + pointerdown
+
+function dodgeNo(){
+  // Debounce: ignore if fired within 300ms of last dodge
+  const now = Date.now();
+  if(now - lastDodgeTime < 300) return;
+  lastDodgeTime = now;
+
+  noText.innerText = noMsgs[noDodgeCount % noMsgs.length];
+  noDodgeCount++;
+
+  // Grow Yes button slightly each dodge
+  const scale = Math.min(1 + noDodgeCount * 0.06, 1.5);
+  yesBtn.style.transform = `scale(${scale})`;
+
+  // On first dodge, move No button out of card into body
+  // (card has transform from animation which breaks position:fixed on children)
+  if(!noBtnMoved){
+    document.body.appendChild(noBtn);
+    noBtnMoved = true;
+  }
+
+  const cardRect = card.getBoundingClientRect();
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const btnW = 100, btnH = 50;
+
+  // Build list of zones: above, below, right of card — NEVER left
+  const zones = [];
+  if(cardRect.top > btnH + 30){
+    zones.push({ top: 10 + Math.random() * (cardRect.top - btnH - 30),
+                 left: 10 + Math.random() * (vw - btnW - 20) });
+  }
+  if(vh - cardRect.bottom > btnH + 30){
+    zones.push({ top: cardRect.bottom + 15 + Math.random() * Math.min(vh - cardRect.bottom - btnH - 30, 100),
+                 left: 10 + Math.random() * (vw - btnW - 20) });
+  }
+  if(vw - cardRect.right > btnW + 30){
+    zones.push({ top: cardRect.top + Math.random() * Math.max(cardRect.height - btnH, 0),
+                 left: cardRect.right + 15 + Math.random() * Math.min(vw - cardRect.right - btnW - 30, 80) });
+  }
+
+  if(zones.length === 0){
+    zones.push({ top: vh - btnH - 30, left: (vw - btnW) / 2 });
+  }
+
+  let zIdx;
+  do { zIdx = Math.floor(Math.random() * zones.length); }
+  while(zIdx === lastDodgeZone && zones.length > 1);
+  lastDodgeZone = zIdx;
+
+  const pos = zones[zIdx];
+  noBtn.style.position = "fixed";
+  noBtn.style.top = pos.top + "px";
+  noBtn.style.left = pos.left + "px";
+  noBtn.style.transform = "none";
+  noBtn.style.zIndex = "50";
+}
+
+// Desktop hover + mobile touch — both trigger dodge
+noBtn.addEventListener("pointerenter",(e)=>{ e.preventDefault(); dodgeNo(); });
+noBtn.addEventListener("pointerdown",(e)=>{ e.preventDefault(); dodgeNo(); });
+noBtn.addEventListener("click",(e)=>{ e.preventDefault(); dodgeNo(); });
 
 /* ================= YES CLICK ================= */
 yesBtn.onclick = ()=>{
   card.style.display = "none";
-
-  // PAUSE music immediately
+  noBtn.style.display = "none"; // hide No button (it may be outside card in body)
   music.pause();
 
-  // Screen flash for dramatic effect
+  // Screen flash
   const flash = document.createElement("div");
   flash.className = "screenFlash";
   document.body.appendChild(flash);
-  setTimeout(()=>flash.remove(),400);
+  setTimeout(()=>flash.remove(),500);
 
-  // Play firecrackers for 2 seconds, THEN resume song
+  // Confetti burst
+  spawnConfetti(80);
+
+  // Firecrackers for 2 seconds, THEN resume song + slideshow
   firecrackerShow(()=>{
-    // After 2 seconds of firecrackers, start the song and slideshow
+    // Stop ALL still-playing firecracker audio immediately
+    activeCrackerAudio.forEach(s => { s.pause(); s.currentTime = 0; });
+    activeCrackerAudio.length = 0;
+
     music.currentTime = 60;
-    music.volume = .7;
+    music.volume = .9;
     music.play().catch(()=>{});
     startSlideshow();
   });
 };
 
+/* ================= CONFETTI ================= */
+function spawnConfetti(count){
+  const colors = ["#ff4d6d","#ffd166","#a855f7","#38bdf8","#ff85a1","#34d399","#fff"];
+  for(let i = 0; i < count; i++){
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = (10 + Math.random()*80)+"vw";
+    c.style.top  = "-10px";
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration = (2 + Math.random()*2)+"s";
+    c.style.animationDelay = (Math.random()*.8)+"s";
+    c.style.borderRadius = Math.random() > .5 ? "50%" : "2px";
+    c.style.width  = (5+Math.random()*6)+"px";
+    c.style.height = (8+Math.random()*8)+"px";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),5000);
+  }
+}
+
 /* ================= FIRECRACKERS ================= */
 function firecrackerShow(cb){
-  // Multiple bursts spread across 2 seconds
-  const burstTimes = [0, 300, 600, 1000, 1400, 1700];
-  burstTimes.forEach((t,i) => {
+  // 5 bursts with audio, then 2 visual-only tail bursts
+  const audioBursts = [0, 250, 500, 800, 1100];
+  const visualTail  = [1400, 1700];
+  const total = audioBursts.length;
+
+  audioBursts.forEach((t,i) => {
     setTimeout(()=>{
-      const isFinale = (i === burstTimes.length - 1);
-      const particles = isFinale ? 250 : 80 + Math.random()*60;
-      const vol = isFinale ? 1 : .7 + Math.random()*.2;
-      // Vary burst positions
-      const cx = 30 + Math.random()*40; // 30-70% of screen width
-      const cy = 25 + Math.random()*30; // 25-55% of screen height
+      const fade = Math.pow(1 - i / (total - 1), 2);
+      const vol = 0.80 * fade + 0.03;
+      const particles = Math.round(220 * fade + 30);
+      const cx = 20 + Math.random()*60;
+      const cy = 15 + Math.random()*40;
       burst(particles, vol, cx, cy);
     }, t);
   });
 
-  // After 2 seconds, call the callback
-  setTimeout(cb, 2200);
+  // Tail bursts are visual only — no sound leak into music
+  visualTail.forEach(t => {
+    setTimeout(()=>{
+      const cx = 20 + Math.random()*60;
+      const cy = 15 + Math.random()*40;
+      burstVisual(30, cx, cy);
+    }, t);
+  });
+
+  setTimeout(cb, 1800);
 }
 
 function burst(particles, vol, cx, cy){
-  // Play a firecracker sound for each burst
   const snd = new Audio(fireSounds[Math.floor(Math.random()*fireSounds.length)]);
   snd.volume = vol;
   snd.play().catch(()=>{});
+  activeCrackerAudio.push(snd);
+  snd.addEventListener("ended",()=>{
+    const i = activeCrackerAudio.indexOf(snd);
+    if(i > -1) activeCrackerAudio.splice(i, 1);
+  });
 
-  const colors = ["#ff4d6d","#ffd166","#ff85a1","#a855f7","#38bdf8","#fff","#fb923c"];
+  const colors = ["#ff4d6d","#ffd166","#ff85a1","#a855f7","#38bdf8","#fff","#fb923c","#34d399"];
   for(let i = 0; i < particles; i++){
     const f = document.createElement("div");
     f.className = "firework";
@@ -536,49 +823,213 @@ function burst(particles, vol, cx, cy){
     f.style.background = c;
     f.style.color = c;
     const angle = Math.random()*Math.PI*2;
-    const dist  = 80 + Math.random()*300;
+    const dist  = 60 + Math.random()*320;
     f.style.setProperty("--x", Math.cos(angle)*dist+"px");
     f.style.setProperty("--y", Math.sin(angle)*dist+"px");
     document.body.appendChild(f);
-    setTimeout(()=>f.remove(),1400);
+    setTimeout(()=>f.remove(),1500);
   }
 }
 
 /* ================= SLIDESHOW ================= */
-const images = [...Array(22)].map((_,i)=>`p${i+1}.jpeg`);
+// p1-p22 in slideshow, skip p19 and p21 (p19 = final reveal, p21 = excluded)
+const images = [...Array(22)].map((_,i)=>`p${i+1}.jpeg`).filter(s => s !== "p19.jpeg" && s !== "p21.jpeg");
 let idx = 0;
+
+// Preload all slideshow images to avoid flicker
+(function preloadImages(){
+  images.forEach(src => { const img = new Image(); img.src = src; });
+  // Also preload the final reveal image
+  const fin = new Image(); fin.src = "p19.jpeg";
+})();
+
+let slideshowSparkleInterval = null;
 
 function startSlideshow(){
   stopFalling();
   idx = 0;
+
+  // Set up first image on layer A, layer B hidden
+  slideA.src = images[0];
+  slideA.classList.add("active");
+  slideB.classList.remove("active");
   slideshow.style.display = "flex";
-  slideImg.src = images[0];
-  slideImg.classList.remove("fadeOut");
+
+  // Sparkles falling during slideshow
+  startSlideshowSparkles();
+
+  let useA = true; // tracks which layer is currently showing
 
   const interval = setInterval(()=>{
-    // Fade out current image
-    slideImg.classList.add("fadeOut");
-
-    setTimeout(()=>{
-      idx++;
-      if(idx >= images.length){
-        clearInterval(interval);
+    idx++;
+    if(idx >= images.length){
+      clearInterval(interval);
+      stopSlideshowSparkles();
+      // Fade out the current layer, then end
+      slideA.classList.remove("active");
+      slideB.classList.remove("active");
+      setTimeout(()=>{
         slideshow.style.display = "none";
         showFinalScreen();
-        return;
-      }
-      slideImg.src = images[idx];
-      slideImg.classList.remove("fadeOut");
-    },500);
-  },2500);
+      }, 800);
+      return;
+    }
+
+    if(useA){
+      // Load next on B, crossfade: B fades in, A fades out
+      slideB.src = images[idx];
+      slideB.classList.add("active");
+      slideA.classList.remove("active");
+    } else {
+      // Load next on A, crossfade: A fades in, B fades out
+      slideA.src = images[idx];
+      slideA.classList.add("active");
+      slideB.classList.remove("active");
+    }
+    useA = !useA;
+  }, 2500);
 }
 
-/* ================= FINAL ================= */
+/* ================= SLIDESHOW SPARKLES ================= */
+function startSlideshowSparkles(){
+  const items = ["✨","💫","🌸","💖","⭐"];
+  slideshowSparkleInterval = setInterval(()=>{
+    const s = document.createElement("div");
+    s.className = "fall";
+    s.innerText = items[Math.floor(Math.random()*items.length)];
+    s.style.left = Math.random()*100+"vw";
+    s.style.fontSize = (16 + Math.random()*14)+"px";
+    s.style.animationDuration = (6 + Math.random()*4)+"s";
+    s.style.opacity = ".5";
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(), 10000);
+  }, 800);
+}
+
+function stopSlideshowSparkles(){
+  if(slideshowSparkleInterval){
+    clearInterval(slideshowSparkleInterval);
+    slideshowSparkleInterval = null;
+  }
+}
+
+/* ================= FINAL SCREEN ================= */
 function showFinalScreen(){
   stopFalling();
+  stopBalloons();
   document.body.classList.add("finalBG");
   photoReveal.classList.add("show");
-  startBalloons();
+
+  // Orbiting sparkles around the photo
+  createOrbitSparkles();
+
+  // Floating mini hearts
+  startMiniHearts();
+
+  // Typewriter love message
+  typeMessage("Love You Tejamma\nThank you for being my Valentine");
+
+  // Restart balloons after a beat
+  setTimeout(startBalloons, 1500);
+
+  // Mini fireworks on final screen
+  startFinalFireworks();
+}
+
+/* ================= ORBITING SPARKLES ================= */
+function createOrbitSparkles(){
+  const sparkles = ["✨","💫","⭐","💖"];
+  const frame = photoFrame;
+  const rect = frame.getBoundingClientRect();
+  const r = Math.max(rect.width, rect.height) / 2 + 30;
+
+  for(let i = 0; i < 6; i++){
+    const sp = document.createElement("div");
+    sp.className = "orbitSparkle";
+    sp.innerText = sparkles[i % sparkles.length];
+    sp.style.setProperty("--r", r+"px");
+    sp.style.animationDuration = (6 + i*1.5)+"s";
+    sp.style.animationDelay = (i * -1)+"s";
+    sp.style.left = "50%";
+    sp.style.top  = "50%";
+    sp.style.fontSize = (14 + Math.random()*8)+"px";
+    frame.appendChild(sp);
+  }
+}
+
+/* ================= MINI FLOATING HEARTS ================= */
+let miniHeartInterval = null;
+function startMiniHearts(){
+  const hearts = ["💕","💗","💖","🤍","💜"];
+  miniHeartInterval = setInterval(()=>{
+    const h = document.createElement("div");
+    h.className = "miniHeart";
+    h.innerText = hearts[Math.floor(Math.random()*hearts.length)];
+    h.style.left = Math.random()*100+"vw";
+    h.style.bottom = "-30px";
+    h.style.fontSize = (16 + Math.random()*18)+"px";
+    h.style.animationDuration = (8 + Math.random()*6)+"s";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),15000);
+  },600);
+}
+
+/* ================= TYPEWRITER EFFECT ================= */
+function typeMessage(text){
+  loveMsg.innerHTML = "";
+  const cursor = document.createElement("span");
+  cursor.className = "cursor";
+
+  let i = 0;
+  function type(){
+    if(i < text.length){
+      if(text[i] === "\n"){
+        loveMsg.appendChild(document.createElement("br"));
+      } else {
+        loveMsg.appendChild(document.createTextNode(text[i]));
+      }
+      loveMsg.appendChild(cursor);
+      i++;
+      setTimeout(type, 60 + Math.random()*40);
+    } else {
+      // Remove cursor after a while
+      setTimeout(()=>cursor.remove(), 2500);
+    }
+  }
+  // Start after photo animates in
+  setTimeout(type, 800);
+}
+
+/* ================= FINAL SCREEN MINI FIREWORKS (visual only, no sound) ================= */
+function startFinalFireworks(){
+  let count = 0;
+  const iv = setInterval(()=>{
+    const cx = 10 + Math.random()*80;
+    const cy = 10 + Math.random()*50;
+    burstVisual(30, cx, cy);
+    count++;
+    if(count > 8) clearInterval(iv);
+  }, 2500);
+}
+
+/* Visual-only burst — no firecracker audio */
+function burstVisual(particles, cx, cy){
+  const colors = ["#ff4d6d","#ffd166","#ff85a1","#a855f7","#38bdf8","#fff","#fb923c","#34d399"];
+  for(let i = 0; i < particles; i++){
+    const f = document.createElement("div");
+    f.className = "firework";
+    f.style.left = cx+"vw";
+    f.style.top  = cy+"vh";
+    const c = colors[Math.floor(Math.random()*colors.length)];
+    f.style.background = c;
+    f.style.color = c;
+    const angle = Math.random()*Math.PI*2;
+    const dist  = 60 + Math.random()*320;
+    f.style.setProperty("--x", Math.cos(angle)*dist+"px");
+    f.style.setProperty("--y", Math.sin(angle)*dist+"px");
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),1500);
+  }
 }
 </script>
 
