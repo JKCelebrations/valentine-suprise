@@ -72,7 +72,7 @@ body{
 
 /* ================= GIFT ================= */
 #gift{
-  font-size:160px;
+  font-size:160px;f
   cursor:pointer;
   pointer-events:auto;
   animation:float 2s ease-in-out infinite;
@@ -152,8 +152,8 @@ button{
   pointer-events:none;
 }
 #slideshow img{
-  width:360px;
-  height:520px;
+  width:450px;
+  height:600px;
   max-width:90vw;
   max-height:75vh;
   object-fit:cover;
@@ -200,7 +200,7 @@ button{
 <div id="slideshow"><img id="slideImg"></div>
 
 <div id="photoReveal">
-  <img src="p2.jpeg">
+  <img src="p19.jpeg">
   <h2 style="color:white; text-align:center">
     💕 Love You Tejamma 💕<br>
     Thank you for being my Valentine 💖
@@ -355,7 +355,7 @@ function burst(particles,vol){
 }
 
 /* ================= SLIDESHOW ================= */
-const images=[...Array(17)].map((_,i)=>`p${i+1}.jpeg`);
+const images=[...Array(22)].map((_,i)=>`p${i+1}.jpeg`);
 let idx=0;
 
 function startSlideshow(){
@@ -382,7 +382,7 @@ function showFinalScreen(){
   stopFalling();               // ❌ ensure nothing falls
   document.body.classList.add("finalBG");
   photoReveal.classList.add("show");
-  startBalloons();             // 🎈 balloons only
+  startBalloons();             //mp3 🎈 balloons only
 }
 </script>
 
